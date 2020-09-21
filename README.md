@@ -18,20 +18,14 @@ MHD_add_response_header(response, "Access-Control-Allow-Origin", client);
 #### Con Docker
 
 ##### Servidor
-```
+```bash
 sudo docker build -t api .
-```
-
-```
 sudo docker run -it -p 8888:8888 api ./api 8888
 ```
 
 ##### Cliente
-```
+```bash
 cd client && sudo docker build . -t python-client
-```
-
-```
 sudo docker run -d -p 9000:9000 python-client
 ```
 
@@ -39,15 +33,9 @@ sudo docker run -d -p 9000:9000 python-client
 
 1) Instalación de librerías:
 
-```
+```bash
 sudo apt-get update -y
-```
-
-```
 sudo apt-get install -y libmicrohttpd-dev
-```
-
-```
 sudo apt install -y libjson-c-dev
 ```
 
@@ -55,25 +43,25 @@ sudo apt install -y libjson-c-dev
 
 a) Compilar servidor
 
-```
+```bash
 gcc -o api api.c -ljson-c  -lmicrohttpd
 ```
 
 b) Ejecutar servidor
 
-```
+```bash
 ./api 8888
 ```
 
 3) Cliente
 
 a) Con **Python 2**
-```
+```bash
 python -m SimpleHTTPServer 9000
 ```
 
 b) Con **Python 3**
-```
+```bash
 python3 -m http.server 9000
 ```
 
@@ -100,23 +88,25 @@ Como resultado de la búsqueda vamos a obtener la Temperatura (máxima y mínima
 
 A continuación podemos ver un ejemplo de la estructura del objeto JSON:
 
+```json
+{
+	"Ciudad": "Madrid",
+	"Pronostico extendido": [
 	{
-	    "Ciudad": "Madrid",
-	    "Pronostico extendido": [
-		{
-		    "Temperatura maxima": 22.45,
-		    "Temperatura minima": 12.55,
-		    "Precipitacion": 0,
-		    "Fecha": "2020-10-09"
-		},
-		{
-		    "Temperatura maxima": 20.95,
-		    "Temperatura minima": 13.25,
-		    "Precipitacion": 0,
-		    "Fecha": "2020-10-10"
-		}
-	    ]
+		"Temperatura maxima": 22.45,
+		"Temperatura minima": 12.55,
+		"Precipitacion": 0,
+		"Fecha": "2020-10-09"
+	},
+	{
+		"Temperatura maxima": 20.95,
+		"Temperatura minima": 13.25,
+		"Precipitacion": 0,
+		"Fecha": "2020-10-10"
 	}
+	]
+}
+```
 
 ### Ejemplo de uso
 
