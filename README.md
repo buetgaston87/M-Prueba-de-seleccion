@@ -84,7 +84,7 @@ La Fecha se selecciona desde un calendario en el formato año, mes, día (YYYY/M
 Para la Unidad se puede seleccionar uno de dos opciones, Celsius o Fahrenheit.
 ![interface_4](./resources/interface_4.png)
 
-Como resultado de la búsqueda vamos a obtener la Temperatura (máxima y mínima) y la Precipitación, para la ciudad seleccionada, para los datos que tengann una fecha posterior a la indicada (sin incluir la fecha introducida), convertidos a la unidad elegida. El mismo se va a obtener en formato JSON.
+Como resultado de la búsqueda vamos a obtener la Temperatura (máxima y mínima) y la Precipitación, para la ciudad seleccionada, para los datos que tengan una fecha posterior a la indicada (sin incluir la fecha introducida), convertidos a la unidad elegida. El mismo se va a obtener en formato JSON.
 
 A continuación podemos ver un ejemplo de la estructura del objeto JSON:
 
