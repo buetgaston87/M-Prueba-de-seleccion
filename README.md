@@ -10,9 +10,6 @@ Autenticación de origen en el servidor:
 
 ```
 /* to allow CORS from origin. Character "*" allows all origins (not recommended) */
-```
-
-```
 MHD_add_response_header(response, "Access-Control-Allow-Origin", client);
 ```
 
