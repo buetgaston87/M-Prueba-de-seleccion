@@ -1,7 +1,7 @@
 ## Meteológica. Prueba de selección para puesto de programador backend
 
 ### Librerías utilizadas
-Para el desarrollo de la api se utilizaron las librerias **GNU Libmicrohttpd** que permite ejecutar de manera sencilla un servidor HHTP para una aplicación en C, y **json-c** para convertir el resultado en un JSON.
+Para el desarrollo de la api se utilizaron las librerias **GNU Libmicrohttpd** que permite ejecutar de manera sencilla un servidor HTTP para una aplicación en C, y **json-c** para convertir el resultado en un JSON.
 La elección en ambos casos, se debe a la facilidad de uso, la buena documentación y el hecho de que sean Open Source.
 
 Para evitar restricciones al acceso de recursos desde un origen distinto (dominio) del de la api, se ejecuta un servidor web local. Por su facilidad, se usa el módulo **SimpleHTTPServer** de **Python**. De esta manera se puede ejecutar el HTML desde un dominio y puerto específico, autenticado en la api.
