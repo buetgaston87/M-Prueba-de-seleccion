@@ -405,11 +405,9 @@ int element_in_array(char *arr,char *toSearch)
 */
 unsigned char * list_of_cities_JSON()
 {
-   char arr_cities[BUFFER_SIZE];
-
-    /*  dynamically allocate memory using malloc() */
-    char* tmp = malloc(CITYLENGTH * sizeof(char));    
-
+    char arr_cities[BUFFER_SIZE];
+    char tmp[128];
+    
     struct weatherData *p_weather;
     
     /* pointer to first element of weather structure array */
@@ -433,10 +431,11 @@ unsigned char * list_of_cities_JSON()
             p_weather++;
             continue;
         }
-        
+        /* initialise tmp to zeros first, to not have arbitrary information in it */
+        memset(&tmp, 0, sizeof(tmp));
+
         /* copy the value of p_weather->city into tmp */
-        strncpy(tmp, " ", strlen(tmp));
-        strncpy(tmp, p_weather->city, strlen(p_weather->city));        
+        strncpy(tmp, p_weather->city, strlen(p_weather->city));
 
         /* in case of a messy list we looking for p_weather->city in  arr_cities */
         if (element_in_array(arr_cities, p_weather->city))
@@ -456,9 +455,6 @@ unsigned char * list_of_cities_JSON()
         p_weather++;
 
     }
-
-    /* free memory */
-    free(tmp);
 
     /* form the json object */
     /* each of these is like a key value pair */
