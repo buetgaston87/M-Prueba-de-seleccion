@@ -1,9 +1,3 @@
-/**
-*   Prueba de selección para puesto de programador backend
-*   Gastón Buet
-*   buetgaston87@gmail.com
-*/
-
 #define _XOPEN_SOURCE /* necessary for strptime */
 
 /* json-c library */
@@ -26,9 +20,9 @@
 #include <stdlib.h> /* atof */
 
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 #define FILENAME "Meteologica_vacante_ProgramadorC_20200901_datos.csv"
-#define CITYLENGTH 25
+#define CITYLENGTH 50
 
 struct temperature 
 {
@@ -363,7 +357,6 @@ unsigned char * weather_for_city_and_date_JSON()
         json_object_array_add(jarray,jobj2);        
 
         p_weather++;
-
     }
 
     /* form the json object */
@@ -373,30 +366,6 @@ unsigned char * weather_for_city_and_date_JSON()
 
     /* now return the json object */
     return (unsigned char *)json_object_to_json_string(jobj);
-
-}
-
-
-/**
-* Check if an element is in array.
-*/
-int element_in_array(char *arr,char *toSearch)
-{    
-    int i=0;
-
-    for(i=0; i < sizeof(arr); i++)
-    {
-        /* if element is found in array then raise found flag
-            and terminate from loop */
-        if(strcmp(&arr[i], toSearch) == 0)
-        {
-            return 1;
-        }
-    }
-
-    strncpy(&arr[i], toSearch, strlen(toSearch));    
-
-    return 0;
 }
 
 
@@ -405,8 +374,7 @@ int element_in_array(char *arr,char *toSearch)
 */
 unsigned char * list_of_cities_JSON()
 {
-    char arr_cities[BUFFER_SIZE];
-    char tmp[128];
+    char arr_cities[BUFFER_SIZE];    
     
     struct weatherData *p_weather;
     
@@ -419,32 +387,21 @@ unsigned char * list_of_cities_JSON()
     /* creating a json array */
     json_object *jarray = json_object_new_array();
 
+    size_t count = 0;
     size_t i;
 
     /* Loop to get a non-repeating list of cities */
     for (i = 0; i < count_weather; i++)
-    {                           
-        /* check if p_weather->city was the last city */
-        if (strcmp(p_weather->city, tmp) == 0)
-        {
-            /* next element */
-            p_weather++;
-            continue;
-        }
-        /* initialise tmp to zeros first, to not have arbitrary information in it */
-        memset(&tmp, 0, sizeof(tmp));
-
-        /* copy the value of p_weather->city into tmp */
-        strncpy(tmp, p_weather->city, strlen(p_weather->city));
-
-        /* in case of a messy list we looking for p_weather->city in  arr_cities */
-        if (element_in_array(arr_cities, p_weather->city))
-        {
-            /* next element */
+    {
+        /* check if p_weather->city is in arr_cities */
+        if (strstr(arr_cities, p_weather->city) != NULL) {            
             p_weather++;
             continue;
         }
         
+        /* copy the value of p_weather->city into the arr_cities */
+        strncpy(&arr_cities[count++], p_weather->city, strlen(p_weather->city));
+
         /* creating a json string */
         json_object *jstring = json_object_new_string(p_weather->city);        
         
