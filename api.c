@@ -40,6 +40,7 @@ struct weatherData
 };
 
 struct tm tm1;
+struct tm tm2;
 
 struct weatherData weather[BUFFER_SIZE];
 struct weatherData  *weatherPointer[BUFFER_SIZE];
@@ -154,26 +155,57 @@ void give_format_to_line(char *buf)
     replace_word(buf, ";;", ";_;"); 
 }
 
+/**
+ *  Check date existing 
+ */
+int is_valid_date(struct tm tmDate)
+{    
+    /* copy the entered date to the validate date structure */
+    struct tm tmValidateDate;
+    memcpy( &tmValidateDate, &tmDate, sizeof(struct tm) );
+
+    /* if timeptr references a date before midnight, January 1, 1970, or if the calendar time cannot be 
+    represented, mktime returns –1 cast to type time_t. */
+    time_t timeCalendar = mktime( &tmValidateDate );
+    if( timeCalendar == (time_t) -1 ) 
+        return 0;
+
+    return (
+            (tmDate.tm_mday == tmValidateDate.tm_mday) &&
+            (tmDate.tm_mon == tmValidateDate.tm_mon) &&
+            (tmDate.tm_year == tmValidateDate.tm_year)
+            );
+}
+
 
 /**
  * Parses the line and save data in weather structure.
  */
-void save_data_in_weather_structure(char *buf, struct weatherData *p_weather)
+int save_data_in_weather_structure(char *buf, struct weatherData *p_weather)
 {
     char *tok;
     char delimit[]=";";
     
     /* initialise everything to zeros first, to not have arbitrary information in all its fields 
         before parsing the time string */
-    memset(&p_weather->date, 0, sizeof(struct tm));
+    memset( &tm2, 0, sizeof(struct tm) );
     
     /* parse the line into tokens separated by characters in delimit */
-    tok = strtok(buf, delimit);        
+    tok = strtok(buf, delimit);
     /* check if data can be converted to tm type */
-    if (strptime(tok, "%Y/%m/%d", &p_weather->date))
-        /* save the value in weather structure in tm type */
-        strptime(tok, "%Y/%m/%d", &p_weather->date);
-    
+    if (!strptime(tok, "%Y/%m/%d", &tm2))
+        return 0;
+    /* check if date exists */
+    if(!is_valid_date(tm2))
+        return 0;
+
+    /* initialise everything to zeros first, to not have arbitrary information in all its fields 
+        before parsing the time string */
+    memset(&p_weather->date, 0, sizeof(struct tm));
+
+    /* save the value in weather structure in tm type */
+    strptime(tok, "%Y/%m/%d", &p_weather->date);
+
     /* parses the next token */
     tok = strtok(NULL, delimit);
     /* save the value in weather structure */
@@ -197,6 +229,7 @@ void save_data_in_weather_structure(char *buf, struct weatherData *p_weather)
     if (atof(tok))
         p_weather->cloudiness = atof(tok);
     
+    return 1;
 }
 
 
@@ -227,21 +260,20 @@ void load_csv_file()
     /* reads the firs line of the file but not use it */
     fgets(buf, sizeof(buf), fp);
     
-    while (!feof(fp))
-    {                                        
-        /* reads the next line of the file */
-        fgets(buf, sizeof(buf), fp);
-
+    /* reads the next line of the file */
+    while (fgets(buf, sizeof(buf), fp))
+    {
         /* calls the function to give format to the line */
         give_format_to_line(buf);
 
         /* calls the function to save line data in weather structure */
-        save_data_in_weather_structure(buf, p_weather);
-
-        /* next element of weather structure array */
-        p_weather++;
-        
-        count_weather++;
+        if (save_data_in_weather_structure(buf, p_weather))
+        {
+            /* next element of weather structure array */
+            p_weather++;
+            
+            count_weather++;
+        }
     }
 
     fclose(fp);
@@ -271,10 +303,10 @@ void get_weather_for_city_and_date()
 
     size_t i;
     for (i = 0; i < count_weather; i++)
-    {        
+    {
         /* compare the city and date of the line of file and the city and date recieves from get paramaters */
-        if ((strcmp(p_weather->city, p_city) == 0) && (difftime(mktime(&p_weather->date), mktime(&tm1)) > 0))
-        {                       
+        if ((strcmp(p_weather->city, p_city) == 0) && (difftime(mktime(&p_weather->date), mktime(&tm1)) >= 0))
+        {
             /* point to the field of array weather */
             weatherPointer[count_weatherPointer] = p_weather;
             
