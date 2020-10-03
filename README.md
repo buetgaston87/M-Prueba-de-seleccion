@@ -1,4 +1,4 @@
-## Meteológica. Prueba de selección para puesto de programador backend
+## Prueba de selección para puesto de programador backend
 
 ### Librerías utilizadas
 Para el desarrollo de la api se utilizaron las librerias **GNU Libmicrohttpd** que permite ejecutar de manera sencilla un servidor HTTP para una aplicación en C, y **json-c** para convertir el resultado en un JSON.

@@ -21,7 +21,7 @@
 
 
 #define BUFFER_SIZE 2048
-#define FILENAME "Meteologica_vacante_ProgramadorC_20200901_datos.csv"
+#define FILENAME "Datos.csv"
 #define CITYLENGTH 50
 
 struct temperature 
@@ -58,7 +58,9 @@ int answer_to_connection (void *cls, struct MHD_Connection *connection,
                           const char *upload_data,
                           size_t *upload_data_size, void ** ptr);
 
-
+void string_init(char** string_ptr);
+void string_free(char** string_ptr);
+void string_set(char** destination, char* value);
 
 /**
  * Call with the port number as the only argument.
@@ -374,7 +376,9 @@ unsigned char * weather_for_city_and_date_JSON()
 */
 unsigned char * list_of_cities_JSON()
 {
-    char arr_cities[BUFFER_SIZE];    
+    char *list_cities;
+
+    string_init(&list_cities);
     
     struct weatherData *p_weather;
     
@@ -394,13 +398,15 @@ unsigned char * list_of_cities_JSON()
     for (i = 0; i < count_weather; i++)
     {
         /* check if p_weather->city is in arr_cities */
-        if (strstr(arr_cities, p_weather->city) != NULL) {            
+        if (strstr(list_cities, p_weather->city) != NULL) {            
             p_weather++;
             continue;
         }
         
-        /* copy the value of p_weather->city into the arr_cities */
-        strncpy(&arr_cities[count++], p_weather->city, strlen(p_weather->city));
+        string_set(&list_cities, p_weather->city);
+
+        /* add the value of p_weather->city into the arr_cities */
+        strcat(list_cities, p_weather->city);
 
         /* creating a json string */
         json_object *jstring = json_object_new_string(p_weather->city);        
@@ -412,6 +418,8 @@ unsigned char * list_of_cities_JSON()
         p_weather++;
 
     }
+
+    string_free(&list_cities);
 
     /* form the json object */
     /* each of these is like a key value pair */
@@ -498,4 +506,27 @@ int answer_to_connection (void *cls, struct MHD_Connection *connection,
     MHD_destroy_response (response);
 
     return ret;
+}
+
+
+void string_init(char** string_ptr)
+{    
+    /* create a string pointer and allocate memory for it */
+    char *ptr = malloc(sizeof(char));
+
+    /* dereference our pointer and set its address to the new contiguous block of memory */
+    *string_ptr = ptr;
+}
+
+
+void string_free(char** string_ptr)
+{
+    free(*string_ptr);
+}
+
+
+void string_set(char** destination, char* value)
+{
+    int new_size = strlen(value) + strlen(*destination);
+    *destination = realloc(*destination, sizeof(char)*new_size+1);
 }
