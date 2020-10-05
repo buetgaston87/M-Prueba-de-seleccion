@@ -125,7 +125,7 @@ void replace_word(char *s, char *oldW, char *newW)
         strncpy(pch+len_newW,buf,strlen(buf));
         
         /* pointer to the first occurrence in s of oldW (is the next oldW of the original s)*/
-        pch = strstr(s,oldW);     
+        pch = strstr(pch+len_newW,oldW);     
     }
 }
 
@@ -559,6 +559,6 @@ void string_free(char** string_ptr)
 
 void string_set(char** destination, char* value)
 {
-    int new_size = strlen(value) + strlen(*destination);
+    int new_size = strlen(value);
     *destination = realloc(*destination, sizeof(char)*new_size+1);
 }
