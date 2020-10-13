@@ -541,6 +541,9 @@ int answer_to_connection (void *cls, struct MHD_Connection *connection,
 }
 
 
+ /** 
+  * Initial memory allocation 
+  */
 void string_init(char** string_ptr)
 {    
     /* create a string pointer and allocate memory for it */
@@ -551,12 +554,18 @@ void string_init(char** string_ptr)
 }
 
 
+ /** 
+  * Free memory
+  */
 void string_free(char** string_ptr)
 {
     free(*string_ptr);
 }
 
 
+/** 
+ * Reallocating memory 
+*/
 void string_set(char** destination, char* value)
 {
     int new_size = strlen(value);
