@@ -146,7 +146,7 @@ void remove_spaces(char *s)
 
 
 /**
- * Calls replaceWord and remove_spaces functions to give format to line.
+ * Calls replace_word and remove_spaces functions to give format to line.
  */
 void give_format_to_line(char *buf)
 {
@@ -154,6 +154,7 @@ void give_format_to_line(char *buf)
     remove_spaces(buf);
     replace_word(buf, ";;", ";_;"); 
 }
+
 
 /**
  *  Check date existing 
@@ -429,7 +430,7 @@ unsigned char * list_of_cities_JSON()
     /* Loop to get a non-repeating list of cities */
     for (i = 0; i < count_weather; i++)
     {
-        /* check if p_weather->city is in arr_cities */
+        /* check if p_weather->city is in list_cities */
         if (strstr(list_cities, p_weather->city) != NULL) {            
             p_weather++;
             continue;
@@ -437,7 +438,7 @@ unsigned char * list_of_cities_JSON()
         
         string_set(&list_cities, p_weather->city);
 
-        /* add the value of p_weather->city into the arr_cities */
+        /* add the value of p_weather->city into the list_cities */
         strcat(list_cities, p_weather->city);
 
         /* creating a json string */
